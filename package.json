@@ -21,7 +21,9 @@
   },
   "dependencies": {
     "@anatine/zod-nestjs": "^2.0.12",
+    "@google/generative-ai": "^0.24.1",
     "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/jwt": "^11.0.2",
     "@nestjs/passport": "^11.0.5",
