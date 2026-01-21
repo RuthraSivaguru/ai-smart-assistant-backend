@@ -16,11 +16,14 @@ export class AuthService {
   async register(dto: { name: string; email: string; password: string }) {
     const hashed = await bcrypt.hash(dto.password, 10);
 
-    return this.usersRepo.save({
+    const user = await this.usersRepo.save({
       name: dto.name,
       email: dto.email,
       password: hashed,
     });
+
+    const { password: _, ...result } = user;
+    return result;
   }
 
   async login(dto: { email: string; password: string }) {

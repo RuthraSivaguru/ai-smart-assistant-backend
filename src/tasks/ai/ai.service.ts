@@ -1,13 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { Injectable, Logger } from '@nestjs/common';
+import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
 import { ConfigService } from '@nestjs/config';
 import { AITaskSchema } from '../schemas/ai-task.schema';
 import { parseTaskPrompt } from './parseTask.prompt';
 
 @Injectable()
 export class AIService {
+  private readonly logger = new Logger(AIService.name);
   private genAI: GoogleGenerativeAI;
-  private model: any;
+  private model: GenerativeModel;
 
   constructor(private configService: ConfigService) {
     this.genAI = new GoogleGenerativeAI(
@@ -41,7 +42,7 @@ export class AIService {
         dueDate: new Date(parsed.dueDate),
       };
     } catch (error) {
-      console.error('AI Service Error:', error);
+      this.logger.error('AI Service Error:', error);
       throw error;
     }
   }

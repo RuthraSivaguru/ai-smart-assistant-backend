@@ -14,13 +14,13 @@ export class TasksController {
     return this.tasksService.findAll(req.user.sub);
   }
 
-  @Post()
-  createTask(
-    @Body(new ZodValidationPipe(createTaskSchema)) body: CreateTaskDto,
-    @Req() req: any,
-  ) {
-    return this.tasksService.create(body, req.user.sub);
-  }
+  // @Post()
+  // createTask(
+  //   @Body(new ZodValidationPipe(createTaskSchema)) body: CreateTaskDto,
+  //   @Req() req: any,
+  // ) {
+  //   return this.tasksService.create(body, req.user.sub);
+  // }
 
   @Post('ai')
   @UseGuards(AuthGuard('jwt'))
