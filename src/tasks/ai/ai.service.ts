@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
 import { ConfigService } from '@nestjs/config';
+import { z } from 'zod';
 import { AITaskSchema } from '../schemas/ai-task.schema';
 import { parseTaskPrompt } from './parseTask.prompt';
 
@@ -32,15 +33,20 @@ export class AIService {
         .replace(/```/g, '')
         .trim();
 
-      const json = JSON.parse(text);
+      let json = JSON.parse(text);
 
-      // ✅ Zod validation
-      const parsed = AITaskSchema.parse(json);
+      // Safeguard: ensure we have an array
+      if (!Array.isArray(json)) {
+        json = [json];
+      }
 
-      return {
+      // ✅ Zod validation for an array of tasks
+      const parsedArray = z.array(AITaskSchema).parse(json);
+
+      return parsedArray.map((parsed) => ({
         ...parsed,
-        dueDate: new Date(parsed.dueDate),
-      };
+        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      }));
     } catch (error) {
       this.logger.error('AI Service Error:', error);
       throw error;

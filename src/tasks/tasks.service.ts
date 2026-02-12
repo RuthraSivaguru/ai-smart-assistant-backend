@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AIService } from './ai/ai.service';
 import { Task } from './task.entity';
-import { CreateTaskDto } from './schemas/create-task.schema';
+import { UpdateTaskDto } from './schemas/update-task-schema';
 
 @Injectable()
 export class TasksService {
@@ -25,13 +25,28 @@ export class TasksService {
   //   return this.repo.save(task);
   // }
   async createFromAI(input: string, userId: string) {
-    const aiTask = await this.aiService.parseTask(input);
+    const aiTasks = await this.aiService.parseTask(input);
 
-    const task = this.repo.create({
-      ...aiTask,
-      userId,
+    const tasks = aiTasks.map((aiTask) =>
+      this.repo.create({
+        ...aiTask,
+        userId,
+      }),
+    );
+
+    return this.repo.save(tasks);
+  }
+
+  async updateTask(id: string, body: UpdateTaskDto, userId: string) {
+    const task = await this.repo.findOne({
+      where: { id, userId },
     });
-    console.log('task', task);
+
+    if (!task) {
+      throw new NotFoundException('Task not found');
+    }
+
+    Object.assign(task, body);
     return this.repo.save(task);
   }
 }

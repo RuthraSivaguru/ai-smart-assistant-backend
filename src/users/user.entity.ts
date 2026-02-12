@@ -20,6 +20,12 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ nullable: true })
+  address: string;
+
+  @Column({ nullable: true })
+  phoneNumber: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
