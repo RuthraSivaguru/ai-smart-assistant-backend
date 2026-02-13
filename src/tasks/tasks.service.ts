@@ -13,17 +13,10 @@ export class TasksService {
     private readonly aiService: AIService,
   ) {}
 
-  findAll(userId: string) {
+  async findAll(userId: string) {
     return this.repo.find({ where: { userId } });
   }
 
-  // async create(body: CreateTaskDto, userId: string) {
-  //   const task = this.repo.create({
-  //     ...body,
-  //     userId,
-  //   });
-  //   return this.repo.save(task);
-  // }
   async createFromAI(input: string, userId: string) {
     const aiTasks = await this.aiService.parseTask(input);
 
@@ -42,11 +35,25 @@ export class TasksService {
       where: { id, userId },
     });
 
+    console.log(task);
     if (!task) {
       throw new NotFoundException('Task not found');
     }
 
     Object.assign(task, body);
     return this.repo.save(task);
+  }
+
+  async deleteTask(id: string, userId: string) {
+    const task = await this.repo.findOne({
+      where: { id, userId },
+    });
+
+    if (!task) {
+      throw new NotFoundException('Task not found');
+    }
+
+    await this.repo.remove(task);
+    return { message: 'Task deleted successfully', data: task };
   }
 }

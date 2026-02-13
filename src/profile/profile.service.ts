@@ -30,10 +30,17 @@ export class ProfileService {
   }
 
   async updateProfile(userId: string, body: any) {
-    const data = await this.repo.update(userId, body);
+    if (!userId) {
+      throw new Error('User ID is required for updating profile');
+    }
+    const data = await this.repo.update(userId, {
+      ...body,
+      updatedAt: new Date(),
+    });
     if (!data) {
       throw new Error('User not found');
     }
-    return data;
+    const updatedData = await this.getProfile(userId);
+    return { message: 'Profile updated successfully', updatedData };
   }
 }

@@ -7,6 +7,7 @@ import {
   Req,
   Put,
   Param,
+  Delete,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { TasksService } from './tasks.service';
@@ -35,5 +36,12 @@ export class TasksController {
     @Req() req: any,
   ) {
     return this.tasksService.updateTask(id, body, req.user.sub);
+  }
+
+  @Delete('delete/:id')
+  @UseGuards(AuthGuard('jwt'))
+  async deleteTask(@Param('id') id: string, @Req() req: any) {
+    const deletedTask = await this.tasksService.deleteTask(id, req.user.sub);
+    return deletedTask;
   }
 }
