@@ -9,7 +9,7 @@ export const profileUpdateSchema = z.object({
     .max(10, 'Phone number is too long')
     .optional(),
   address: z.string().min(3, 'Address is required').optional(),
-  updatedAt: z.date().optional(),
+  updatedAt: z.string().optional(),
 });
 
 export type ProfileUpdate = z.infer<typeof profileUpdateSchema>;
