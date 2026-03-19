@@ -27,11 +27,12 @@ export class AIService {
       const response = await result.response;
       let text = response.text();
 
+      console.log(text);
       // Clean up markdown code blocks if any
       text = text
-        .replace(/```json/g, '')
-        .replace(/```/g, '')
-        .trim();
+        ?.replace(/```json/g, '')
+        ?.replace(/```/g, '')
+        ?.trim();
 
       let json = JSON.parse(text);
 

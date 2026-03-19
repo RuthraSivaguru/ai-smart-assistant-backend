@@ -9,6 +9,11 @@ cleanup() {
 # Trap EXIT signal (happens on script finish or interruption)
 trap cleanup EXIT
 
+# Free port 3000 if already in use
+echo "Freeing port 3000..."
+lsof -ti tcp:3000 | xargs kill -9 2>/dev/null || true
+pkill -9 -f "nest start" 2>/dev/null || true
+
 # Start Docker containers in the background
 echo "Starting database..."
 docker-compose up -d

@@ -4,7 +4,7 @@ services:
     image: postgres:15
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: '7235'
       POSTGRES_DB: ai_assistant
     ports:
       - '5432:5432'

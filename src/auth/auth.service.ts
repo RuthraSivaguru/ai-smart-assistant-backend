@@ -38,7 +38,7 @@ export class AuthService {
     const user = await this.usersRepo.findOne({
       where: { email: dto.email },
     });
-
+    console.log(user);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }

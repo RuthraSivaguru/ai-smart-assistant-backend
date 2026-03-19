@@ -8,6 +8,7 @@ import {
   Put,
   Param,
   Delete,
+  BadRequestException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { TasksService } from './tasks.service';
@@ -24,7 +25,13 @@ export class TasksController {
 
   @Post('ai')
   @UseGuards(AuthGuard('jwt'))
-  async createFromAI(@Body('input') input: string, @Req() req: any) {
+  async createFromAI(@Body() body: any, @Req() req: any) {
+    const input = body.title || body.prompt || body.input;
+    if (!input) {
+      throw new BadRequestException(
+        'You must provide a "title", "input", or "prompt" field',
+      );
+    }
     return this.tasksService.createFromAI(input, req.user.sub);
   }
 
